@@ -4,54 +4,78 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ketala's Housewarming Invitation</title>
+    
+    <meta property="og:title" content="You are Cordially Invited! ✨" />
+    <meta property="og:description" content="Tap the envelope to open our digital invitation." />
+    <meta property="og:image" content="https://sohanketala.github.io/Initation/envelope.png" />
+    <meta property="og:url" content="https://sohanketala.github.io/Initation/" />
+    <meta property="og:type" content="website" />
+
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body {
             background-color: #f7f4eb;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            overflow: hidden;
+            /* Allows scrolling on smaller mobile screens so the tall card isn't cut off */
+            overflow-y: auto; 
             font-family: Arial, sans-serif;
+            padding: 20px 0;
         }
-        /* The main container holding the envelope and card */
+
+        /* Responsive container that handles the centering cleanly */
         .invitation-container {
             position: relative;
-            width: 360px;
-            height: 500px;
+            width: 90%;
+            max-width: 400px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             cursor: pointer;
-            perspective: 1000px;
         }
+
         /* Base styling for envelope and card */
         .envelope, .card {
-            position: absolute;
             width: 100%;
-            transition: all 1s ease-in-out;
+            height: auto;
+            transition: all 0.8s ease-in-out;
         }
+
         .envelope {
+            position: absolute;
             z-index: 2;
-            top: 30%;
             box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            border-radius: 4px;
         }
+
         .card {
+            position: absolute;
+            /* Prevents the ultra-tall card from blowing past mobile screen heights */
+            max-height: 85vh; 
+            object-fit: contain;
             z-index: 1;
-            top: 32%;
-            transform: scale(0.95);
             opacity: 0;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transform: scale(0.8);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
         }
+
         /* ANIMATION STATES TRIGGERED BY JAVASCRIPT */
-        /* 1. Fade out or drop the envelope slightly */
+        
+        /* Smoothly scale down and fade out the envelope completely */
         .invitation-container.open .envelope {
-            transform: translateY(100px);
+            transform: scale(0.5);
             opacity: 0;
             pointer-events: none;
         }
-        /* 2. Slide the card up, scale it to full screen view */
+
+        /* Bring the card to full scale, center it perfectly, and make it scrollable if required */
         .invitation-container.open .card {
+            position: relative; 
             opacity: 1;
-            transform: scale(1) translateY(-130px);
+            transform: scale(1);
             z-index: 3;
         }
     </style>
@@ -59,10 +83,8 @@
 <body>
 
     <div class="invitation-container" id="inviteBox">
-        <!-- Envelope Image -->
         <img src="envelope.png" alt="Envelope" class="envelope">
         
-        <!-- Invitation Card Image -->
         <img src="card.jpeg" alt="Invitation Card" class="card">
     </div>
 
