@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ketala's Housewarming Invitation</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background-color: #f7f4eb;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+        /* The main container holding the envelope and card */
+        .invitation-container {
+            position: relative;
+            width: 360px;
+            height: 500px;
+            cursor: pointer;
+            perspective: 1000px;
+        }
+        /* Base styling for envelope and card */
+        .envelope, .card {
+            position: absolute;
+            width: 100%;
+            transition: all 1s ease-in-out;
+        }
+        .envelope {
+            z-index: 2;
+            top: 30%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+        .card {
+            z-index: 1;
+            top: 32%;
+            transform: scale(0.95);
+            opacity: 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        /* ANIMATION STATES TRIGGERED BY JAVASCRIPT */
+        /* 1. Fade out or drop the envelope slightly */
+        .invitation-container.open .envelope {
+            transform: translateY(100px);
+            opacity: 0;
+            pointer-events: none;
+        }
+        /* 2. Slide the card up, scale it to full screen view */
+        .invitation-container.open .card {
+            opacity: 1;
+            transform: scale(1) translateY(-130px);
+            z-index: 3;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="invitation-container" id="inviteBox">
+        <!-- Envelope Image -->
+        <img src="envelope.jpeg" alt="Envelope" class="envelope">
+        
+        <!-- Invitation Card Image -->
+        <img src="card.jpeg" alt="Invitation Card" class="card">
+    </div>
+
+    <script>
+        const inviteBox = document.getElementById('inviteBox');
+        inviteBox.addEventListener('click', () => {
+            inviteBox.classList.toggle('open');
+        });
+    </script>
+</body>
+</html>
