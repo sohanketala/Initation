@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ketala's Housewarming Invitation</title>
     
-    <!-- WhatsApp Preview Meta Tags -->
     <meta property="og:title" content="You are Cordially Invited! ✨" />
     <meta property="og:description" content="Tap the envelope to open our digital invitation." />
     <meta property="og:image" content="https://sohanketala.github.io/Initation/envelope.png" />
@@ -16,82 +15,143 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
-            background-color: #f7f4eb;
+            background-color: #f5f0e1;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             overflow-y: auto; 
-            font-family: Arial, sans-serif;
-            padding: 40px 0;
+            font-family: 'Georgia', serif;
+            padding: 30px 0;
+            perspective: 1500px;
         }
 
-        /* Perspective context wrapper for smooth 3D animations */
+        /* 3D Scene Wrapper */
         .invitation-container {
             position: relative;
             width: 90%;
-            max-width: 400px;
-            height: 280px; /* Aligns container layout around the envelope height */
+            max-width: 420px;
+            height: 300px;
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            perspective: 1200px;
+            transform-style: preserve-3d;
+            transition: transform 1s ease;
         }
 
-        /* Envelope stays upfront initially */
-        .envelope {
+        /* The Envelope Base Layer */
+        .envelope-wrapper {
             position: absolute;
             width: 100%;
-            height: auto;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 2;
-            transition: transform 0.9s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.8s ease;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.12);
-            border-radius: 4px;
-            transform-origin: bottom center;
         }
 
-        /* Card is hidden tucked slightly lower 'inside' the boundary envelope frame */
+        .envelope-img {
+            width: 100%;
+            height: auto;
+            display: block;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            border-radius: 6px;
+            backface-visibility: hidden;
+        }
+
+        /* Cinematic 3D Flap Illusion using CSS shapes over your image */
+        .envelope-wrapper::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 50%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0.05) 100%);
+            border-radius: 6px 6px 0 0;
+            transform-origin: top center;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 4;
+        }
+
+        /* The Invitation Card - Layered strictly 'inside' the 3D space */
         .card {
             position: absolute;
-            width: 95%;
-            max-height: 85vh; 
+            width: 92%;
+            max-height: 85vh;
             object-fit: contain;
-            z-index: 1;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            border-radius: 4px;
             opacity: 0;
-            /* Starts lower down inside the envelope area scaled slightly small */
-            transform: translateY(20px) scale(0.9);
-            /* Complex cubic-bezier timing controls the "pulling out" slide tempo */
-            transition: transform 1.2s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.6s ease, z-index 0s linear 0.4s;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            z-index: 1;
+            /* Starts nestled silently behind/inside the envelope matrix */
+            transform: translateY(10px) scale(0.9) translateZ(-1px);
+            /* Step-delayed transitions coordinate the theatrical sequence */
+            transition: 
+                transform 1.4s cubic-bezier(0.34, 1.56, 0.64, 1), 
+                opacity 0.4s ease, 
+                box-shadow 1s ease;
         }
 
-        /* ANIMATION SEQUENCE WHEN CLICKED */
+        /* ======================== 
+           INNOVATIVE TIMED ANIMATION 
+           ======================== */
+
+        /* STEP 1: The 3D Flap Rotates Open & Envelope tilts back */
+        .invitation-container.open .envelope-wrapper::after {
+            transform: rotateX(160deg);
+        }
         
-        /* 1. The envelope drops away forward slightly as the card pulls out */
-        .invitation-container.open .envelope {
-            transform: translateY(180px) rotateX(-15deg) scale(0.85);
-            opacity: 0;
+        .invitation-container.open .envelope-wrapper {
+            transform: translateY(120px) rotateX(-20deg) scale(0.9);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            opacity: 0.4;
             pointer-events: none;
         }
 
-        /* 2. The card dramatically shoots upwards, pops to front z-index, and settles into view */
+        /* STEP 2: Card shoots upwards out of the pocket, then glides seamlessly to the foreground */
         .invitation-container.open .card {
             position: relative;
             opacity: 1;
-            z-index: 3;
-            /* Negative translate handles the fluid upward extraction motion out of the envelope */
-            transform: translateY(0) scale(1.05);
+            z-index: 10;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+            /* Pulls all the way out up top (-160px), leaps forward in 3D space, and settles smoothly */
+            animation: pullOutAndSettle 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+
+        @keyframes pullOutAndSettle {
+            0% {
+                transform: translateY(10px) scale(0.9) translateZ(-1px);
+                opacity: 0;
+            }
+            40% {
+                /* Shoots directly up out of the top of the envelope */
+                transform: translateY(-180px) scale(0.95) translateZ(50px);
+                opacity: 1;
+            }
+            100% {
+                /* Descends into center stage, presenting perfectly scale-maximized */
+                transform: translateY(-80px) scale(1.04) translateZ(100px);
+                opacity: 1;
+            }
+        }
+
+        /* Subtle ambient floating effect on the card once it is completely opened */
+        .invitation-container.open .card {
+            animation: pullOutAndSettle 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards, 
+                       ambientFloat 4s ease-in-out infinite alternate 1.5s;
+        }
+
+        @keyframes ambientFloat {
+            0% { transform: translateY(-80px) scale(1.04) rotate(0deg); }
+            100% { transform: translateY(-85px) scale(1.04) rotate(0.5deg); }
         }
     </style>
 </head>
 <body>
 
     <div class="invitation-container" id="inviteBox">
-        <!-- Envelope Image -->
-        <img src="envelope.png" alt="Envelope" class="envelope">
+        <div class="envelope-wrapper">
+            <img src="envelope.png" alt="Envelope" class="envelope-img">
+        </div>
         
-        <!-- Invitation Card Image -->
         <img src="card.jpeg" alt="Invitation Card" class="card">
     </div>
 
