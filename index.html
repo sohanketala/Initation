@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ketala's Housewarming Invitation</title>
     
+    <!-- WhatsApp Preview Meta Tags -->
     <meta property="og:title" content="You are Cordially Invited! ✨" />
     <meta property="og:description" content="Tap the envelope to open our digital invitation." />
     <meta property="og:image" content="https://sohanketala.github.io/Initation/envelope.png" />
@@ -20,71 +21,77 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            /* Allows scrolling on smaller mobile screens so the tall card isn't cut off */
             overflow-y: auto; 
             font-family: Arial, sans-serif;
-            padding: 20px 0;
+            padding: 40px 0;
         }
 
-        /* Responsive container that handles the centering cleanly */
+        /* Perspective context wrapper for smooth 3D animations */
         .invitation-container {
             position: relative;
             width: 90%;
             max-width: 400px;
+            height: 280px; /* Aligns container layout around the envelope height */
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
+            perspective: 1200px;
         }
 
-        /* Base styling for envelope and card */
-        .envelope, .card {
-            width: 100%;
-            height: auto;
-            transition: all 0.8s ease-in-out;
-        }
-
+        /* Envelope stays upfront initially */
         .envelope {
             position: absolute;
+            width: 100%;
+            height: auto;
             z-index: 2;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            transition: transform 0.9s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.8s ease;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.12);
             border-radius: 4px;
+            transform-origin: bottom center;
         }
 
+        /* Card is hidden tucked slightly lower 'inside' the boundary envelope frame */
         .card {
             position: absolute;
-            /* Prevents the ultra-tall card from blowing past mobile screen heights */
+            width: 95%;
             max-height: 85vh; 
             object-fit: contain;
             z-index: 1;
             opacity: 0;
-            transform: scale(0.8);
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            /* Starts lower down inside the envelope area scaled slightly small */
+            transform: translateY(20px) scale(0.9);
+            /* Complex cubic-bezier timing controls the "pulling out" slide tempo */
+            transition: transform 1.2s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.6s ease, z-index 0s linear 0.4s;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
         }
 
-        /* ANIMATION STATES TRIGGERED BY JAVASCRIPT */
+        /* ANIMATION SEQUENCE WHEN CLICKED */
         
-        /* Smoothly scale down and fade out the envelope completely */
+        /* 1. The envelope drops away forward slightly as the card pulls out */
         .invitation-container.open .envelope {
-            transform: scale(0.5);
+            transform: translateY(180px) rotateX(-15deg) scale(0.85);
             opacity: 0;
             pointer-events: none;
         }
 
-        /* Bring the card to full scale, center it perfectly, and make it scrollable if required */
+        /* 2. The card dramatically shoots upwards, pops to front z-index, and settles into view */
         .invitation-container.open .card {
-            position: relative; 
+            position: relative;
             opacity: 1;
-            transform: scale(1);
             z-index: 3;
+            /* Negative translate handles the fluid upward extraction motion out of the envelope */
+            transform: translateY(0) scale(1.05);
         }
     </style>
 </head>
 <body>
 
     <div class="invitation-container" id="inviteBox">
+        <!-- Envelope Image -->
         <img src="envelope.png" alt="Envelope" class="envelope">
         
+        <!-- Invitation Card Image -->
         <img src="card.jpeg" alt="Invitation Card" class="card">
     </div>
 
