@@ -15,142 +15,104 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
-            background-color: #f5f0e1;
+            background-color: #f7f4eb;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             overflow-y: auto; 
-            font-family: 'Georgia', serif;
-            padding: 30px 0;
-            perspective: 1500px;
+            font-family: Arial, sans-serif;
+            padding: 20px 0;
         }
 
-        /* 3D Scene Wrapper */
+        /* Container acts as a strict mask to hide the card initially */
         .invitation-container {
             position: relative;
             width: 90%;
-            max-width: 420px;
-            height: 300px;
+            max-width: 400px;
+            height: 280px; /* Locked to the exact height framework of your envelope */
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            transform-style: preserve-3d;
-            transition: transform 1s ease;
         }
 
-        /* The Envelope Base Layer */
-        .envelope-wrapper {
+        /* Envelope is perfectly fixed in front */
+        .envelope {
             position: absolute;
-            width: 100%;
-            height: 100%;
-            transform-style: preserve-3d;
-            transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 2;
-        }
-
-        .envelope-img {
             width: 100%;
             height: auto;
-            display: block;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            z-index: 5; /* Stays above the unclicked card */
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
             border-radius: 6px;
-            backface-visibility: hidden;
         }
 
-        /* Cinematic 3D Flap Illusion using CSS shapes over your image */
-        .envelope-wrapper::after {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 50%;
-            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0.05) 100%);
-            border-radius: 6px 6px 0 0;
-            transform-origin: top center;
-            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 4;
-        }
-
-        /* The Invitation Card - Layered strictly 'inside' the 3D space */
+        /* Card is perfectly hidden directly under the envelope frame */
         .card {
             position: absolute;
-            width: 92%;
-            max-height: 85vh;
+            width: 96%;
+            max-height: 85vh; 
             object-fit: contain;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-            border-radius: 4px;
+            z-index: 1; /* Hidden behind envelope */
             opacity: 0;
-            z-index: 1;
-            /* Starts nestled silently behind/inside the envelope matrix */
-            transform: translateY(10px) scale(0.9) translateZ(-1px);
-            /* Step-delayed transitions coordinate the theatrical sequence */
-            transition: 
-                transform 1.4s cubic-bezier(0.34, 1.56, 0.64, 1), 
-                opacity 0.4s ease, 
-                box-shadow 1s ease;
+            transform: scale(0.9) translateY(0);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            border-radius: 4px;
         }
 
-        /* ======================== 
-           INNOVATIVE TIMED ANIMATION 
-           ======================== */
+        /* ==========================================
+           CINEMATIC DRAWER SLIDE-OUT ANIMATION
+           ========================================== */
 
-        /* STEP 1: The 3D Flap Rotates Open & Envelope tilts back */
-        .invitation-container.open .envelope-wrapper::after {
-            transform: rotateX(160deg);
-        }
-        
-        .invitation-container.open .envelope-wrapper {
-            transform: translateY(120px) rotateX(-20deg) scale(0.9);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-            opacity: 0.4;
+        /* When opened, the envelope cleanly fades and slides downward out of focus */
+        .invitation-container.open .envelope {
+            transform: translateY(200px) scale(0.8);
+            opacity: 0;
             pointer-events: none;
         }
 
-        /* STEP 2: Card shoots upwards out of the pocket, then glides seamlessly to the foreground */
+        /* The card gracefully scales up, rises to the front, and fills center stage */
         .invitation-container.open .card {
-            position: relative;
+            position: relative; /* Breaks out of absolute layer to expand the webpage frame */
             opacity: 1;
-            z-index: 10;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.25);
-            /* Pulls all the way out up top (-160px), leaps forward in 3D space, and settles smoothly */
-            animation: pullOutAndSettle 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+            z-index: 10; /* Jumps way ahead of the fading envelope */
+            animation: slideOutAndReveal 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
         }
 
-        @keyframes pullOutAndSettle {
+        @keyframes slideOutAndReveal {
             0% {
-                transform: translateY(10px) scale(0.9) translateZ(-1px);
+                transform: scale(0.9) translateY(0);
                 opacity: 0;
             }
             40% {
-                /* Shoots directly up out of the top of the envelope */
-                transform: translateY(-180px) scale(0.95) translateZ(50px);
-                opacity: 1;
+                /* Shoots smoothly upwards out of the envelope track */
+                transform: scale(0.95) translateY(-120px);
+                opacity: 0.8;
             }
             100% {
-                /* Descends into center stage, presenting perfectly scale-maximized */
-                transform: translateY(-80px) scale(1.04) translateZ(100px);
+                /* Comes completely forward into center focus */
+                transform: scale(1.05) translateY(-40px);
                 opacity: 1;
             }
         }
 
-        /* Subtle ambient floating effect on the card once it is completely opened */
+        /* Subtle premium breathing/floating effect after opening */
         .invitation-container.open .card {
-            animation: pullOutAndSettle 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards, 
-                       ambientFloat 4s ease-in-out infinite alternate 1.5s;
+            animation: slideOutAndReveal 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards,
+                       gentleFloat 4s ease-in-out infinite alternate 1.2s;
         }
 
-        @keyframes ambientFloat {
-            0% { transform: translateY(-80px) scale(1.04) rotate(0deg); }
-            100% { transform: translateY(-85px) scale(1.04) rotate(0.5deg); }
+        @keyframes gentleFloat {
+            0% { transform: scale(1.05) translateY(-40px); }
+            100% { transform: scale(1.05) translateY(-45px); }
         }
     </style>
 </head>
 <body>
 
     <div class="invitation-container" id="inviteBox">
-        <div class="envelope-wrapper">
-            <img src="envelope.png" alt="Envelope" class="envelope-img">
-        </div>
+        <img src="envelope.png" alt="Envelope" class="envelope">
         
         <img src="card.jpeg" alt="Invitation Card" class="card">
     </div>
